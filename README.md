@@ -1,125 +1,111 @@
-Zabbix IP-51.250.21.192
-Логин- Admin
-Пароль-zabbix
+Ключевая задача — разработать отказоустойчивую инфраструктуру для сайта, включающую мониторинг, сбор логов и резервное копирование основных данных. Инфраструктура должна размещаться в Yandex Cloud и отвечать минимальным стандартам безопасности.
 
-Kibana IP-51.250.28.206: 5601
-Логин-elastic
-Пароль-aA48HS5t8dU=PyoPlLch
+## Инфраструктура
 
- 
-Задача
-Ключевая задача — разработать отказоустойчивую инфраструктуру для сайта, включающую мониторинг, сбор логов и резервное копирование основных данных. Инфраструктура должна размещаться в Yandex Cloud и отвечать минимальным стандартам безопасности: запрещается выкладывать токен от облака в git. Используйте инструкцию.
-Перед началом работы над дипломным заданием изучите Инструкция по экономии облачных ресурсов.
-Инфраструктура
-Для развёртки инфраструктуры используйте Terraform и Ansible.
-Не используйте для ansible inventory ip-адреса! Вместо этого используйте fqdn имена виртуальных машин в зоне ".ru-central1.internal". Пример: example.ru-central1.internal
-Важно: используйте по-возможности минимальные конфигурации ВМ:2 ядра 20% Intel ice lake, 2-4Гб памяти, 10hdd, прерываемая.
-Так как прерываемая ВМ проработает не больше 24ч, перед сдачей работы на проверку дипломному руководителю сделайте ваши ВМ постоянно работающими.
-Ознакомьтесь со всеми пунктами из этой секции, не беритесь сразу выполнять задание, не дочитав до конца. Пункты взаимосвязаны и могут влиять друг на друга.
-Создаю ВМ Web1, Web2 по предложенным характеристикам 
-Сайт
-Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.
-Устанавливаю Nginx на Web1 и Web2 с помощью ansibleя
-я создаю inventory.cfg файл со списком всех хостов, которыми я хотели бы управлять. 
-10.129.0.31 10.129.0.34 ansible_user = admin
-Мы создадим Ansible playbook с именем install_nginx.yaml для установки сервера Nginx на всех хостах, упомянутых в inventory.cfg веб-группе.---
-- hosts: web1
- tasks:
-   - name: install nginx
-     apt: name=nginx state=latest
-   - name: start nginx
-     service:
-         name: nginx
-         state: started
-ansible-playbook -i inventory.cfg nginx_install.yml -b
+### Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/vm_website.png)
 
+### Создайте Target Group, включите в неё две созданных ВМ.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/target_group_vm_website.png)
 
+### Создайте Backend Group, настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/backend_group_vm_website.png)
 
+### Создайте HTTP router. Путь укажите — /, backend group — созданную ранее.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/http_router_vm_website.png)
 
+### Создайте Application load balancer для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/application_load_balancer_vm_website.png)
 
+На вирутальных машинах с использованием ansibe [ansible/nginx.yaml](ansible/nginx.yaml) установлен nginx и развернут сайт. 
 
+### Протестируйте сайт curl -v <публичный IP балансера>:80
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/curl.png)
 
 
-Создайте Target Group, включите в неё две созданных ВМ.
-Создаю Target Group в Yandex Cloud
+## Мониторинг
 
+### Создайте ВМ, разверните на ней Zabbix. На каждую ВМ установите Zabbix агенты, настройте агенты на отправление метрик в Zabbix.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/vm_zabbix.png)
 
+Zabbix сервер на виртуальной машине развернут с использованием ansibe [ansible/zabbix_server.yaml](ansible/zabbix_server.yaml)
 
-Создайте Backend Group, настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
-Создаю Backend Group 
-Создайте HTTP router. Путь укажите — /, backend group — созданную ранее.
 
 
-Создайте Application load balancer для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80. Протестируйте сайт curl -v <публичный IP балансера>:80
-Проверяю публичный сайт:
+Веб-консоль zabbix доступна из сети интернет по адресу http://51.250.39.9/zabbix
 
+Данные для авторизации:
 
-Мониторинг
-Создайте ВМ, разверните на ней Zabbix. На каждую ВМ установите Zabbix Agent, настройте агенты на отправление метрик в Zabbix.Создаю ВМ monitoring и устанавливаю с помощью Ansible пакет zabbix на вм monitoring 
-Настройте дешборды с отображением метрик, минимальный набор — по принципу USE (Utilization, Saturation, Errors) для CPU, RAM, диски, сеть, http запросов к веб-серверам. Добавьте необходимые tresholds на соответствующие графики.
+Логин: Admin
 
-Логи
-Cоздайте ВМ, разверните на ней Elasticsearch. Установите filebeat в ВМ к веб-серверам, настройте на отправку access.log, error.log nginx в Elasticsearch.
+Пароль: zabbix
 
-Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
-Сеть
-Разверните один VPC. Сервера web, Elasticsearch поместите в приватные подсети. Сервера Zabbix, Kibana, application load balancer определите в публичную подсеть.
+На вирутальные машины с вебсайтом с использованием ansibe [ansible/zabbix_agent.ayml](ansible/zabbix_agent.yaml) установлены zabbix агенты. 
 
+Настроено автоматическое обнаружение хостов.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/discovery_actions.png)
 
+Настроены дашборды.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/dashboard.png)
 
 
+## Логи
 
+### Cоздайте ВМ, разверните на ней Elasticsearch. Установите filebeat в ВМ к веб-серверам, настройте на отправку access.log, error.log nginx в Elasticsearch.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/vm_elasticsearch.png)
 
+Elasticsearch на виртуальной машине развернут с использованием ansibe [ansible/elasticsearch.yaml](ansible/elasticsearch.yaml)
 
+Выполнена проверка состояния кластера.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/cluster_health.png)
 
+Filebeat на виртуальной машине развернут с использованием ansibe [ansible/filebeat.yaml](ansible/filebeat.yaml)
 
+Выполнена тестовая проверка доступности elasticsearch.
 
-VPS
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/filebeat_test_vm1.png)
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/filebeat_test_vm2.png)
 
+### Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/vm_kibana.png)
 
+Kibana на виртуальной машине развернута с использованием ansibe [ansible/kibana.yaml](ansible/kibana.yaml)
 
-one-vps
+Веб-консоль kibana доступна из сети интернет по адресу http://51.250.36.191:5601
 
-Настройте Security Groups соответствующих сервисов на входящий трафик только к нужным портам.
-Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Эта вм будет реализовывать концепцию bastion host . Синоним "bastion host" - "Jump host". Подключение ansible к серверам web и Elasticsearch через данный bastion host можно сделать с помощью ProxyCommand . Допускается установка и запуск ansible непосредственно на bastion host.(Этот вариант легче в настройке)
-группа безопасности security-group-bastion
-используется в качестве bastion host для доступа к другим виртуальным сервера по SSH
-для входящего трафика открыт только 22 порт
+Данные для авторизации: без авторизации.
 
+Логи отправляются в elasticsearch.
 
-Группа безопасности security-group-kibana. к ней разрешен со всех источников доступ по порту 5601 (к веб-интерфейсу kibana) и с хоста bastion-host доступ по 22 порту
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/kibana_log.png)
 
 
+## Сеть
 
+### Разверните один VPC. Сервера web, Elasticsearch поместите в приватные подсети. Сервера Zabbix, Kibana, application load balancer определите в публичную подсеть. Настройте Security Groups соответствующих сервисов на входящий трафик только к нужным портам.
 
+Настроены группы безопасности.
 
+![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/security_group.png)
 
 
+## Резервное копирование
 
+### Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
 
+Выполнена настройка резервного копирования.
 
-
-
-Сканирование открытых портов для kibana
-
-
-
-
-
-
-
-Резервное копирование
-Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
+![alt text](https://github.com/rus42/SYS-18_dip

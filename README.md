@@ -85,7 +85,7 @@ Filebeat на виртуальной машине развернут с испо
 
 ### Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
 
-![alt text]((https://github.com/Plavckov/plav-diplom/assets/130914025/49a91851-040f-48f5-bfe7-b6e38a1b4cab)
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/49a91851-040f-48f5-bfe7-b6e38a1b4cab)
 )
 
 Kibana на виртуальной машине развернута с использованием ansibe [ansible/kibana.yaml](ansible/kibana.yaml)

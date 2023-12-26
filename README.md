@@ -27,7 +27,7 @@
 ![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/f5defb28-98c5-47de-9fcf-3b805d52aca8)
 )
 
-На вирутальных машинах с использованием ansibe [ansible/nginx.yaml](ansible/nginx.yaml) установлен nginx и развернут сайт. 
+На вирутальных машинах с использованием ansibe [ansible/nginx.yaml](Ansible/nginx.yaml) установлен nginx и развернут сайт. 
 
 ### Протестируйте сайт curl -v <публичный IP балансера>:80
 
@@ -42,7 +42,7 @@
 ![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/6af081b1-9726-493e-87ba-3afda07f9659)
 
 
-Zabbix сервер на виртуальной машине развернут с использованием ansibe [ansible/zabbix_server.yaml](ansible/zabbix_server.yaml)
+Zabbix сервер на виртуальной машине развернут с использованием ansibe [ansible/zabbix_server.yaml](Ansible/zabbix_server.yaml)
 
 
 
@@ -54,7 +54,7 @@ Zabbix сервер на виртуальной машине развернут 
 
 Пароль: zabbix
 
-На вирутальные машины с вебсайтом с использованием ansibe [ansible/zabbix_agent.ayml](ansible/zabbix_agent.yaml) установлены zabbix агенты. 
+На вирутальные машины с вебсайтом с использованием ansibe [ansible/zabbix_agent.ayml](Ansible/zabbix_agent.yaml) установлены zabbix агенты. 
 
 Настроены дашборды.
 
@@ -69,13 +69,13 @@ Zabbix сервер на виртуальной машине развернут 
 ![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/79e46e6d-c46d-4eb2-ae53-c0ab0c6c0d23)
 )
 
-Elasticsearch на виртуальной машине развернут с использованием ansibe [ansible/elasticsearch.yaml](ansible/elasticsearch.yaml)
+Elasticsearch на виртуальной машине развернут с использованием ansibe [ansible/elasticsearch.yaml](Ansible/elasticsearch.yaml)
 
 Выполнена проверка состояния кластера.
 
 ![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/cluster_health.png)
 
-Filebeat на виртуальной машине развернут с использованием ansibe [ansible/filebeat.yaml](ansible/filebeat.yaml)
+Filebeat на виртуальной машине развернут с использованием ansibe [ansible/filebeat.yaml](Ansible/filebeat.yaml)
 
 Выполнена тестовая проверка доступности elasticsearch.
 
@@ -88,7 +88,7 @@ Filebeat на виртуальной машине развернут с испо
 ![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/49a91851-040f-48f5-bfe7-b6e38a1b4cab)
 )
 
-Kibana на виртуальной машине развернута с использованием ansibe [ansible/kibana.yaml](ansible/kibana.yaml)
+Kibana на виртуальной машине развернута с использованием ansibe [ansible/kibana.yaml](Ansible/kibana.yaml)
 
 Веб-консоль kibana доступна из сети интернет по адресу http://51.250.36.191:5601
 

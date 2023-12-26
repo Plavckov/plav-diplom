@@ -102,15 +102,31 @@ Kibana на виртуальной машине развернута с испо
 
 ![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/48503dc8-5431-4a47-87e1-ce927cb82b17)
 
+группа безопасности security-group-bastion
+используется в качестве bastion host для доступа к другим виртуальным сервера по SSH
+для входящего трафика открыт только 22 порт
+
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/e9ecb18e-aa05-439d-aa88-8ac75341e048)
+
+группа безопасности security-group-kibana.
+к ней разрешен со всех источников доступ по порту 5601 (к веб-интерфейсу kibana) и с хоста bastion-host доступ по 22 порту
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/cf3eea59-126b-4e3d-a3d6-d1c689de8e22)
+
+
 
 
 ## Сеть
 
 ### Разверните один VPC. Сервера web, Elasticsearch поместите в приватные подсети. Сервера Zabbix, Kibana, application load balancer определите в публичную подсеть. Настройте Security Groups соответствующих сервисов на входящий трафик только к нужным портам.
+VPC
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/7d04458b-8e23-42aa-99b4-2b0452bc656b)
+
+
 
 Настроены группы безопасности.
 
-![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/security_group.png)
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/f7baa8d3-2b5a-4af0-9e43-2d813206cb74)
+
 
 
 ## Резервное копирование

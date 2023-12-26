@@ -79,9 +79,11 @@ Filebeat на виртуальной машине развернут с испо
 
 Выполнена тестовая проверка доступности elasticsearch.
 
-![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/filebeat_test_vm1.png)
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/c649be12-dc2b-49cf-8697-4b5245e76605)
 
-![alt text](https://github.com/rus42/SYS-18_diplom/blob/main/img/filebeat_test_vm2.png)
+
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/bad2bf22-9067-4385-a0ed-64290964ab8e)
+
 
 ### Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
 

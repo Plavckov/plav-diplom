@@ -31,7 +31,8 @@
 
 ### Протестируйте сайт curl -v <публичный IP балансера>:80
 
-![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/e6258813-f0b2-4f7c-9cec-96af6525894c)
+![alt text](https://github.com/Plavckov/plav-diplom/assets/130914025/5e3edeed-5f81-465d-b764-b4c2349d3d7b)
+
 )
 
 
